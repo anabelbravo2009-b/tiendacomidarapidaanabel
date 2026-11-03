@@ -1,0 +1,25 @@
+/* Custom Styles for Burger & Pizza Express */
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #f59e0b;
+    border-radius: 4px;
+}
+
+/* Glassmorphism card effects */
+.glass-card {
+    background: rgba(31, 41, 55, 0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}

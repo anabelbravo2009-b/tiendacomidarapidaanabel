@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burger & Pizza Express - Pedidos Online</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 bg-gray-900/90 backdrop-blur-md border-b border-gray-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="filterCategory('all', event)">
+                <div class="bg-gradient-to-tr from-amber-500 to-red-600 p-3 rounded-2xl shadow-lg shadow-amber-500/20">
+                    <i class="fa-solid font-bold fa-burger text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 bg-clip-text text-transparent">
+                        BURGER & PIZZA
+                    </h1>
+                    <p class="text-xs text-gray-400 font-medium">Sabor Real • Pedido Rápido</p>
+                </div>
+            </div>
+            <!-- Cart Trigger Button -->
+            <button onclick="toggleCartModal()" class="relative bg-amber-500 hover:bg-amber-400 text-gray-950 px-5 py-2.5 rounded-full font-bold flex items-center space-x-3 transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-amber-500/20">
+                <i class="fa-solid fa-cart-shopping text-lg"></i>
+                <span class="hidden sm:inline">Mi Pedido</span>
+                <span id="cart-count-badge" class="bg-red-600 text-white text-xs font-black rounded-full h-6 w-6 flex items-center justify-center border-2 border-amber-500">
+                    0
+                </span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Banner Hero -->
+    <section class="relative bg-gradient-to-b from-gray-900 to-gray-950 py-12 px-4 border-b border-gray-800/50">
+        <div class="max-w-7xl mx-auto text-center space-y-4">
+            <span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase">
+                🔥 ¡Los mejores sabores de la ciudad!
+            </span>
+            <h2 class="text-4xl md:text-6xl font-black text-white tracking-tight">
+                ¡Haz tu pedido en <span class="text-amber-500">segundos</span>!
+            </h2>
+            <p class="text-gray-400 max-w-2xl mx-auto text-sm md:text-base">
+                Selecciona tus comidas favoritas, paga fácilmente con tu app bancaria escaneando nuestro código QR y confirma directamente por WhatsApp.
+            </p>
+            <!-- Categorías Filters -->
+            <div class="flex flex-wrap justify-center gap-3 pt-6">
+                <button onclick="filterCategory('all', event)" class="category-btn active border border-amber-500 bg-amber-500 text-gray-950 px-5 py-2 rounded-xl font-bold text-sm transition-all shadow-md">
+                    <i class="fa-solid fa-border-all mr-1.5"></i> Todo
+                </button>
+                <button onclick="filterCategory('burgers', event)" class="category-btn border border-gray-800 bg-gray-900 hover:border-amber-500 text-gray-300 px-5 py-2 rounded-xl font-bold text-sm transition-all">
+                    <i class="fa-solid fa-burger mr-1.5 text-amber-500"></i> Hamburguesas
+                </button>
+                <button onclick="filterCategory('pizzas', event)" class="category-btn border border-gray-800 bg-gray-900 hover:border-amber-500 text-gray-300 px-5 py-2 rounded-xl font-bold text-sm transition-all">
+                    <i class="fa-solid fa-pizza-slice mr-1.5 text-red-500"></i> Pizzas
+                </button>
+                <button onclick="filterCategory('bebidas', event)" class="category-btn border border-gray-800 bg-gray-900 hover:border-amber-500 text-gray-300 px-5 py-2 rounded-xl font-bold text-sm transition-all">
+                    <i class="fa-solid fa-glass-water mr-1.5 text-orange-400"></i> Jugos & Bebidas
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section Grid -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow">
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Productos renderizados dinámicamente desde JavaScript -->
+        </div>
+    </main>
+
+    <!-- Modal Carrito & Checkout -->
+    <div id="cart-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-gray-800 w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-fadeIn">
+            
+            <!-- Modal Header -->
+            <div class="p-6 bg-gray-950 border-b border-gray-800 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-cart-shopping text-amber-500 text-xl"></i>
+                    <h3 class="text-xl font-bold text-white">Tu Carrito de Compras</h3>
+                </div>
+                <button onclick="toggleCartModal()" class="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-800 transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content (Items list or QR view) -->
+            <div class="p-6 overflow-y-auto flex-1 space-y-6">
+                
+                <!-- Step 1: Resumen del Pedido -->
+                <div id="checkout-step-1">
+                    <div id="cart-items-container" class="space-y-4">
+                        <!-- Items list -->
+                    </div>
+                    <div id="empty-cart-msg" class="text-center py-12 space-y-3">
+                        <i class="fa-solid fa-basket-shopping text-5xl text-gray-700"></i>
+                        <p class="text-gray-400 font-medium">Tu carrito está completamente vacío.</p>
+                        <button onclick="toggleCartModal()" class="text-amber-500 hover:underline text-sm font-semibold">
+                            ¡Ver menú y agregar delicias!
+                        </button>
+                    </div>
+
+                    <!-- Datos del Cliente -->
+                    <div id="client-info-form" class="mt-8 border-t border-gray-800 pt-6 space-y-4 hidden">
+                        <h4 class="font-bold text-white text-md flex items-center gap-2">
+                            <i class="fa-solid fa-user text-amber-500"></i> Datos para la entrega
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-400 mb-1">Nombre Completo *</label>
+                                <input type="text" id="client-name" placeholder="Ej: Juan Pérez" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-400 mb-1">Teléfono / WhatsApp *</label>
+                                <input type="tel" id="client-phone" placeholder="Ej: +591 70000000" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1">Dirección de Envío *</label>
+                            <input type="text" id="client-address" placeholder="Ej: Calle Los Olivos #123, Zona Central" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1">Notas especiales (Opcional)</label>
+                            <input type="text" id="client-notes" placeholder="Ej: Sin cebolla la hamburguesa, entregar rápido" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Pago con QR Fijo y Confirmación WhatsApp -->
+                <div id="checkout-step-2" class="hidden text-center space-y-6">
+                    <div class="bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl text-left">
+                        <p class="text-amber-400 font-semibold text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-qrcode"></i> Escanea el Código QR para pagar
+                        </p>
+                        <p class="text-gray-300 text-xs mt-1">
+                            Abre la app de tu banco móvil, escanea este código QR fijo del negocio y realiza la transferencia por el total exacto.
+                        </p>
+                    </div>
+
+                    <!-- QR Display Box (Imagen Fija) -->
+                    <div class="flex flex-col items-center justify-center bg-white p-6 rounded-2xl shadow-inner max-w-xs mx-auto">
+                        <img src="QR.jpeg" alt="Código QR de Pago" class="w-40 h-40 object-contain mb-3" onerror="this.src='https://placehold.co/160x160/ffffff/000000?text=QR+Fijo';">
+                        <p class="text-gray-900 font-bold text-xs">PAGO VÍA QR SIMPLE</p>
+                        <p class="text-gray-500 text-[10px]">Burger & Pizza Express S.R.L.</p>
+                    </div>
+
+                    <div class="bg-gray-800/80 p-4 rounded-xl text-center space-y-1">
+                        <span class="text-gray-400 text-xs">Monto Total a Transferir:</span>
+                        <div class="text-3xl font-black text-amber-500" id="qr-total-amount">Bs. 0.00</div>
+                    </div>
+
+                    <div class="text-left bg-gray-800/40 p-4 rounded-xl border border-gray-800 text-xs text-gray-300 space-y-1">
+                        <p><strong>Paso final:</strong> Una vez realizado el pago, presiona el botón verde abajo para enviar el desglose de tu pedido y comprobante directamente a nuestro WhatsApp oficial.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer Total & Actions -->
+            <div id="modal-footer" class="p-6 bg-gray-950 border-t border-gray-800 space-y-4 hidden">
+                <div class="flex justify-between items-center text-lg font-bold">
+                    <span class="text-gray-400">Total a Pagar:</span>
+                    <span id="cart-total-price" class="text-amber-500 text-2xl font-black">Bs. 0.00</span>
+                </div>
+                
+                <!-- Step 1 Buttons -->
+                <div id="step-1-buttons" class="flex gap-3">
+                    <button onclick="clearCart()" class="w-1/3 bg-gray-800 hover:bg-red-900/50 hover:text-red-400 text-gray-300 font-semibold py-3 rounded-xl transition text-sm">
+                        Vaciar
+                    </button>
+                    <button onclick="proceedToQR()" class="w-2/3 bg-amber-500 hover:bg-amber-400 text-gray-950 font-bold py-3 rounded-xl transition shadow-lg shadow-amber-500/20 text-sm flex items-center justify-center gap-2">
+                        <span>Pagar con QR</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Step 2 Buttons -->
+                <div id="step-2-buttons" class="hidden flex gap-3">
+                    <button onclick="backToCartStep1()" class="w-1/3 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-3 rounded-xl transition text-sm">
+                        Atrás
+                    </button>
+                    <button onclick="sendOrderToWhatsApp()" class="w-2/3 bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-black py-3 rounded-xl transition shadow-lg shadow-emerald-500/20 text-sm flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-xl"></i>
+                        <span>Enviar a WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Notification Toast Container -->
+    <div id="toast-notification" class="fixed bottom-5 right-5 z-50 transform translate-y-32 opacity-0 transition-all duration-300">
+        <div class="bg-amber-500 text-gray-950 px-5 py-3 rounded-2xl shadow-2xl font-bold flex items-center space-x-3 border border-amber-400">
+            <i class="fa-solid fa-circle-check text-xl"></i>
+            <span id="toast-message">Producto añadido al carrito</span>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-950 border-t border-gray-900 py-8 px-4 text-center text-gray-500 text-sm">
+        <div class="max-w-7xl mx-auto space-y-3">
+            <div class="flex justify-center space-x-6 text-gray-400">
+                <a href="#" class="hover:text-amber-500 transition"><i class="fa-brands fa-facebook text-xl"></i></a>
+                <a href="#" class="hover:text-amber-500 transition"><i class="fa-brands fa-instagram text-xl"></i></a>
+                <a href="#" class="hover:text-amber-500 transition"><i class="fa-brands fa-tiktok text-xl"></i></a>
+            </div>
+            <p>© 2026 Burger & Pizza Express. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Custom Script -->
+    <script src="script.js"></script>
+</body>
+</html>
